@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التقييم المدرسية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* المتغيرات اللونية لتسهيل التحكم بالتصميم */
+        :root {
+            --primary: #4f46e5;       /* لون أساسي حديث */
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;      /* لون خلفية هادئ */
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --success-bg: #ecfdf5;
+            --success-text: #065f46;
+            --border-radius: 16px;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* تصميم الرأس (Header) */
+        header {
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 { margin: 0; font-size: 2.5rem; font-weight: 800; }
+        header p { margin: 0.5rem 0 0; font-size: 1.1rem; opacity: 0.9; }
+
+        /* حاوية المحتوى الرئيسية (تقسيم الشاشة) */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr; /* إعطاء مساحة أكبر لعرض الآراء */
+            gap: 2rem;
+            max-width: 1400px;
+            margin: -2rem auto 2rem; /* سحب المحتوى للأعلى قليلاً فوق الرأس */
+            padding: 0 2rem;
+            flex-grow: 1;
+            z-index: 10;
+        }
+
+        /* جعل التصميم متجاوباً مع الهواتف والشاشات الصغيرة */
+        @media (max-width: 992px) {
+            .main-container { 
+                grid-template-columns: 1fr; 
+                margin-top: 2rem;
+            }
+        }
+
+        /* تصميم البطاقات العامة (للنموذج ولوحة العرض) */
+        .glass-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f9fafb;
+        }
+
+        .glass-card h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* تصميم عناصر الإدخال */
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #f9fafb;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* تصميم لوحة الشرف (عرض الآراء) */
+        .board-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-height: 65vh;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        /* شريط تمرير أنيق */
+        .board-container::-webkit-scrollbar { width: 6px; }
+        .board-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+        .board-container::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 8px; }
+
+        .feedback-item {
+            background: white;
+            border: 1px solid #f3f4f6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            border-right: 5px solid var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .feedback-item:hover {
+            transform: scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .student-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .student-name::before {
+            content: '👤';
+            margin-left: 8px;
+            font-size: 1.1rem;
+        }
+
+        .opinion-text {
+            color: #4b5563;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* تصميم مربع النصيحة المتميز */
+        .advice-box {
+            background-color: var(--success-bg);
+            border-right: 3px solid #10b981;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .advice-box strong {
+            color: var(--success-text);
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .advice-box strong::before {
+            content: '💡';
+            margin-left: 5px;
+        }
+
+        .advice-text {
+            color: #047857;
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        /* إشعار النجاح */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: 700;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .loader {
+            text-align: center;
+            color: #6b7280;
+            font-weight: 500;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>منصة التقييم التفاعلية</h1>
+        <p>نصنع المعرفة معاً ونشارك أفكارنا للإبداع</p>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="glass-card">
+            <h2>📝 شاركنا تجربتك</h2>
+            <form id="surveyForm">
+                <div class="input-group">
+                    <label for="studentName">اسم البطل / البطلة</label>
+                    <input type="text" id="studentName" name="name" placeholder="اكتب اسمك هنا..." required>
+                </div>
+
+                <div class="input-group">
+                    <label for="studentFeedback">ماذا تعلمت من اللعبة؟</label>
+                    <textarea id="studentFeedback" name="feedback" rows="3" placeholder="صف لنا رأيك والفائدة التي حصلت عليها..." required></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="studentAdvice">نصيحة ذهبية لزملائك (اختياري)</label>
+                    <textarea id="studentAdvice" name="advice" rows="2" placeholder="بم تنصح زملائك عند تجربة هذه اللعبة؟..."></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn">إرسال المشاركة</button>
+            </form>
+        </div>
+
+        <div class="glass-card">
+            <h2>🌟 لوحة الإبداع والنصائح</h2>
+            <div class="board-container" id="feedbackContainer">
+                <div class="loader">جاري مزامنة الإبداعات... ⏳</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">✅ تم إرسال مشاركتك بنجاح!</div>
+
+    <script>
+        // ======= ضع رابط الـ Web App الجديد هنا =======
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyPCA6A2wMEu4HMfkOA8szd3Luo7vX3SOfQ8toYLEjQ4apkYWsJq6qIkEA-yTG2sw/exec';
+        // ==============================================
+
+        const form = document.getElementById('surveyForm');
+        const feedbackContainer = document.getElementById('feedbackContainer');
+        const toast = document.getElementById('toast');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // دالة إرسال البيانات
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            // تغيير حالة الزر أثناء الإرسال
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = 'جاري الإرسال... 🚀';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    form.reset();
+                    
+                    // إظهار رسالة النجاح
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 3000);
+                    
+                    // إعادة الزر لحالته
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+
+                    // تحديث اللوحة فوراً
+                    loadFeedbacks(); 
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.disabled = false;
+                    alert("حدث خطأ في الإرسال، يرجى المحاولة لاحقاً.");
+                });
+        });
+
+        // دالة جلب وعرض البيانات
+        function loadFeedbacks() {
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.length === 0) {
+                        feedbackContainer.innerHTML = '<div class="loader">كن أول من يشارك رأيه! 🎯</div>';
+                        return;
+                    }
+
+                    feedbackContainer.innerHTML = ''; 
+                    
+                    // الترتيب العكسي لعرض الأحدث أولاً
+                    data.reverse().forEach(item => {
+                        // التحقق من وجود نصيحة لإنشاء المربع الخاص بها
+                        const adviceHtml = item.advice && item.advice.trim() !== "" ? `
+                            <div class="advice-box">
+                                <strong>نصيحة للزملاء:</strong>
+                                <p class="advice-text">${item.advice}</p>
+                            </div>
+                        ` : '';
+
+                        // بناء بطاقة العرض
+                        const card = document.createElement('div');
+                        card.className = 'feedback-item';
+                        card.innerHTML = `
+                            <div class="student-name">${item.name}</div>
+                            <div class="opinion-text">${item.feedback}</div>
+                            ${adviceHtml}
+                        `;
+                        feedbackContainer.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    feedbackContainer.innerHTML = '<div class="loader" style="color: red;">⚠️ تعذر الاتصال بالخادم، جاري إعادة المحاولة...</div>';
+                });
+        }
+
+        // تحميل البيانات الأولية
+        loadFeedbacks();
+
+        // التحديث التلقائي كل 10 ثواني (مثالي لعرض الشاشة المدرسية)
+        setInterval(loadFeedbacks, 10000);
+    </script>
+</body>
+</html>
