@@ -78,17 +78,29 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
             z-index: 1000;
-            display: none; /* مخفي افتراضياً */
+            display: none; 
             align-items: center;
             justify-content: center;
             color: white;
             text-align: center;
+            flex-direction: column;
+        }
+
+        .presentation-title {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .slide {
             max-width: 90%;
             animation: fadeIn 1.5s ease-out;
-            padding-bottom: 60px; /* لترك مساحة للتذييل */
+            padding-bottom: 60px;
         }
 
         @keyframes fadeIn {
@@ -127,15 +139,15 @@
             border-radius: 50px; cursor: pointer;
             font-family: inherit;
             font-weight: 700;
+            z-index: 1001;
         }
 
-        /* تذييل شاشة العرض (الشرائح) */
         .presentation-footer {
             position: absolute;
-            bottom: 30px; /* مرفوع قليلاً فوق شريط الوقت */
+            bottom: 30px;
             width: 100%;
             text-align: center;
-            color: rgba(255, 255, 255, 0.5); /* لون شبه شفاف ليناسب الخلفية */
+            color: rgba(255, 255, 255, 0.5);
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: 1px;
@@ -179,7 +191,7 @@
             <button class="btn btn-presentation" onclick="startSlideshow()">
                 <span>📺 فتح شاشة العرض المدرسية</span>
             </button>
-            <p style="text-align:center; font-size: 0.9rem; color: #64748b;">(سيتم عرض المشاركات كل مشاركة لمدة دقيقة واحدة)</p>
+            <p style="text-align:center; font-size: 0.9rem; color: #64748b;">(سيتم عرض المشاركات كل مشاركة لمدة 30 ثانية)</p>
         </div>
     </div>
 
@@ -189,6 +201,8 @@
 
     <div id="slideshowContainer">
         <button class="close-btn" onclick="stopSlideshow()">✖ إغلاق العرض</button>
+        
+        <div class="presentation-title">✨ رأي ونصيحة ✨</div>
         
         <div id="slideContent" class="slide">
             </div>
@@ -201,9 +215,7 @@
     </div>
 
     <script>
-        // ======= لا تنسَ وضع رابطك هنا =======
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyPCA6A2wMEu4HMfkOA8szd3Luo7vX3SOfQ8toYLEjQ4apkYWsJq6qIkEA-yTG2sw/exec';
-        // =====================================
 
         let feedbackData = [];
         let currentIndex = 0;
@@ -251,7 +263,8 @@
             currentIndex = 0;
             showSlide();
             
-            slideInterval = setInterval(nextSlide, 60000); 
+            // تم تغيير الوقت هنا إلى 30000 مللي ثانية (30 ثانية)
+            slideInterval = setInterval(nextSlide, 30000); 
         }
 
         function showSlide() {
@@ -261,7 +274,8 @@
 
             timerBar.style.animation = 'none';
             timerBar.offsetHeight; 
-            timerBar.style.animation = 'progress 60s linear forwards';
+            // تم تغيير وقت الأنيميشن لشريط الوقت إلى 30 ثانية
+            timerBar.style.animation = 'progress 30s linear forwards';
 
             content.innerHTML = `
                 <div class="slide-name">👤 الطالب: ${item.name}</div>
