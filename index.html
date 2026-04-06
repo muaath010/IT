@@ -264,7 +264,7 @@
             showSlide();
             
             // تم تغيير الوقت هنا إلى 30000 مللي ثانية (30 ثانية)
-            slideInterval = setInterval(nextSlide, 30000); 
+            slideInterval = setInterval(nextSlide, 20000); 
         }
 
         function showSlide() {
@@ -275,7 +275,7 @@
             timerBar.style.animation = 'none';
             timerBar.offsetHeight; 
             // تم تغيير وقت الأنيميشن لشريط الوقت إلى 30 ثانية
-            timerBar.style.animation = 'progress 30s linear forwards';
+            timerBar.style.animation = 'progress 20s linear forwards';
 
             content.innerHTML = `
                 <div class="slide-name">👤 الطالب: ${item.name}</div>
