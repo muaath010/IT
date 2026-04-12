@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اراء الطلاب | وضع العرض</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>دعم منصة نور | مشاركة المشاكل والحلول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
+            --primary: #0284c7; 
             --secondary: #10b981;
-            --dark: #1e1b4b;
+            --danger: #ef4444;
+            --dark: #0f172a;
             --glass: rgba(255, 255, 255, 0.95);
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background: #f8fafc;
+            background: #f0f9ff;
             margin: 0;
             overflow-x: hidden;
             display: flex;
@@ -23,182 +24,164 @@
             min-height: 100vh;
         }
 
-        /* التصميم الرئيسي (النموذج) */
-        .admin-view {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            flex: 1;
-        }
-
+        .admin-view { max-width: 800px; margin: 40px auto; padding: 20px; flex: 1; }
         .card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
+            background: white; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e0f2fe;
         }
 
-        h1 { color: var(--dark); text-align: center; font-weight: 800; }
+        h1 { color: var(--primary); text-align: center; font-weight: 800; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #64748b; margin-bottom: 30px; font-size: 1.1rem; }
+
+        .row { display: flex; gap: 15px; }
+        .row .input-group { flex: 1; }
 
         .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 700; color: #475569; }
-        input, textarea {
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #334155; }
+        input[type="text"], textarea, select {
             width: 100%; padding: 12px; border: 2px solid #e2e8f0;
             border-radius: 12px; font-family: inherit; font-size: 1rem;
             box-sizing: border-box; transition: 0.3s;
         }
-        input:focus, textarea:focus { border-color: var(--primary); outline: none; }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); outline: none; }
+
+        .radio-group {
+            display: flex; gap: 20px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;
+        }
+        .radio-option { display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer; }
+
+        #solutionDiv, #imageDiv { display: none; margin-top: 15px; animation: fadeIn 0.5s ease; }
+        
+        input[type="file"] {
+            width: 100%; padding: 10px; background: #fff; border: 2px dashed var(--primary);
+            border-radius: 12px; cursor: pointer;
+        }
 
         .btn {
             width: 100%; padding: 15px; border: none; border-radius: 12px;
-            font-size: 1.1rem; font-weight: 800; cursor: pointer;
-            transition: 0.3s; margin-bottom: 10px;
+            font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
         }
-        .btn-submit { background: var(--primary); color: white; }
-        .btn-presentation { 
-            background: var(--dark); color: white; 
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
+        .btn-submit { background: var(--primary); color: white; margin-top: 10px; }
+        .btn-presentation { background: var(--dark); color: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px;}
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* تذييل صفحة الإدخال */
-        .page-footer {
-            text-align: center;
-            padding: 20px;
-            color: #64748b;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-top: auto;
-        }
+        .page-footer { text-align: center; padding: 20px; color: #64748b; font-weight: 700; font-size: 1.1rem;}
 
-        /* شاشة العرض (Slideshow Overlay) */
+        /* شاشة العرض */
         #slideshowContainer {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            z-index: 1000;
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-            flex-direction: column;
-            cursor: pointer; /* تغيير شكل الماوس ليدل على إمكانية النقر */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
+            color: white; text-align: center; flex-direction: column; cursor: pointer;
         }
 
         .presentation-title {
-            position: absolute;
-            top: 40px;
-            width: 100%;
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--secondary);
-            text-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            position: absolute; top: 40px; width: 100%; text-align: center;
+            font-size: 2.5rem; font-weight: 800; color: #38bdf8; text-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
         }
 
-        .slide {
-            max-width: 90%;
-            animation: fadeIn 0.8s ease-out; /* تسريع حركة الظهور قليلاً لتناسب النقر */
-            padding-bottom: 60px;
+        .slide { max-width: 90%; width: 100%; animation: fadeIn 0.8s ease-out; padding-bottom: 60px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .slide-header { font-size: 2.5rem; color: #bae6fd; margin-bottom: 10px; font-weight: 800; }
+        .slide-problem { font-size: 3rem; line-height: 1.4; margin-bottom: 30px; font-weight: 700; color: white; }
+        
+        .slide-solution {
+            background: rgba(16, 185, 129, 0.15); border-right: 8px solid var(--secondary);
+            padding: 30px; border-radius: 15px; font-size: 2.2rem; display: inline-block; max-width: 80%;
+        }
+        
+        /* تنسيق الصورة الفعلي في شاشة العرض */
+        .slide-image {
+            max-width: 70%; 
+            max-height: 400px; 
+            object-fit: contain; 
+            border-radius: 15px; 
+            border: 5px solid #38bdf8;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
+            margin-top: 10px; 
+            background: #fff;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .status-badge {
+            display: inline-block; padding: 8px 20px; border-radius: 50px; font-size: 1.2rem; font-weight: bold; margin-bottom: 20px;
         }
-
-        .slide-name {
-            font-size: 3rem;
-            color: #818cf8;
-            margin-bottom: 20px;
-            font-weight: 800;
-        }
-
-        .slide-feedback {
-            font-size: 2rem; 
-            line-height: 1.4;
-            margin-bottom: 40px;
-            font-weight: 700;
-        }
-
-        .slide-advice {
-            background: rgba(16, 185, 129, 0.2);
-            border-right: 8px solid var(--secondary);
-            padding: 30px;
-            border-radius: 15px;
-            font-size: 2.2rem;
-            display: inline-block;
-            max-width: 80%;
-        }
+        .status-solved { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid #34d399; }
+        .status-unsolved { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid #f87171; }
 
         .close-btn {
-            position: absolute; top: 30px; left: 30px;
-            background: rgba(255,255,255,0.1);
-            color: white; border: none; padding: 10px 20px;
-            border-radius: 50px; cursor: pointer;
-            font-family: inherit;
-            font-weight: 700;
-            z-index: 1001;
+            position: absolute; top: 30px; left: 30px; background: rgba(255,255,255,0.1);
+            color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer;
+            font-family: inherit; font-weight: 700; z-index: 1001;
         }
+        .close-btn:hover { background: rgba(255,0,0,0.6); }
+        .presentation-footer { position: absolute; bottom: 30px; width: 100%; text-align: center; color: rgba(255, 255, 255, 0.4); font-size: 1.5rem; font-weight: 700; }
         
-        .close-btn:hover {
-            background: rgba(255,0,0,0.6);
-        }
-
-        .presentation-footer {
-            position: absolute;
-            bottom: 30px;
-            width: 100%;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        
-        .click-hint {
-            margin-top: 40px;
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0.4; }
-        }
+        .click-hint { margin-top: 30px; font-size: 1.2rem; color: rgba(255, 255, 255, 0.4); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
     </style>
 </head>
 <body>
 
     <div class="admin-view">
         <div class="card">
-            <h1>🎮 شارك برأيك في اللعبة</h1>
-            <form id="surveyForm">
-                <div class="input-group">
-                    <label>اسم الطالب</label>
-                    <input type="text" name="name" placeholder="مثال: احمد محمد الغافري " required>
+            <h1>🖥️ سجل مشاكل منصة نور</h1>
+            <p class="subtitle">شارك المشكلة التي واجهتك، وإذا وجدت حلاً شاركه لنستفيد جميعاً!</p>
+            
+            <form id="supportForm">
+                <div class="row">
+                    <div class="input-group">
+                        <label>اسم الطالب</label>
+                        <input type="text" id="name" placeholder="مثال: أحمد محمد" required>
+                    </div>
+                    <div class="input-group">
+                        <label>الصف الدراسي</label>
+                        <select id="grade" required>
+                            <option value="">اختر الصف...</option>
+                            <option value="الأول المتوسط">الأول المتوسط</option>
+                            <option value="الثاني المتوسط">الثاني المتوسط</option>
+                            <option value="الثالث المتوسط">الثالث المتوسط</option>
+                        </select>
+                    </div>
                 </div>
+
                 <div class="input-group">
-                    <label>ماذا تعلمت من اللعبة؟</label>
-                    <textarea name="feedback" rows="3" placeholder="اكتب رأيك هنا..." required></textarea>
+                    <label>ما هي المشكلة التي واجهتك بوضوح؟</label>
+                    <textarea id="problem" rows="3" placeholder="وصف المشكلة..." required></textarea>
                 </div>
+
                 <div class="input-group">
-                    <label>نصيحة لزملائك الطلاب</label>
-                    <textarea name="advice" rows="2" placeholder="بماذا تنصح الطلاب عند استخدام الانترنت؟"></textarea>
+                    <label>هل تمكنت من حل المشكلة؟</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="hasSolution" value="yes" onchange="toggleFields()"> نعم، وجدت حلاً
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="hasSolution" value="no" onchange="toggleFields()"> لا، أحتاج مساعدة
+                        </label>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-submit" id="submitBtn">إرسال المشاركة</button>
+
+                <div class="input-group" id="solutionDiv">
+                    <label>ما هو الحل؟ (شاركنا الطريقة)</label>
+                    <textarea id="solution" rows="3" placeholder="الخطوات التي قمت بها لحل المشكلة..."></textarea>
+                </div>
+
+                <div class="input-group" id="imageDiv">
+                    <label>قم برفع صورة توضح المشكلة أو الخطأ (اختياري)</label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn btn-submit" id="submitBtn">إرسال التقرير 🚀</button>
             </form>
             
-            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">
             
             <button class="btn btn-presentation" onclick="startSlideshow()">
-                <span>📺 فتح شاشة العرض المدرسية</span>
+                <span>📺 فتح شاشة عرض المشاكل والحلول المدرسية</span>
             </button>
-            <p style="text-align:center; font-size: 0.9rem; color: #64748b;">(انقر للتحكم اليدوي في عرض المشاركات)</p>
+            <p style="text-align:center; font-size: 0.9rem; color: #64748b; margin-top: 10px;">(انقر للتحكم اليدوي في عرض المشاركات)</p>
         </div>
     </div>
 
@@ -208,61 +191,103 @@
 
     <div id="slideshowContainer">
         <button class="close-btn" id="closeBtn">✖ إغلاق العرض</button>
+        <div class="presentation-title">💡 بنك مشاكل وحلول منصة نور</div>
         
-        <div class="presentation-title">✨ رأي ونصيحة ✨</div>
-        
-        <div id="slideContent" class="slide">
-            </div>
+        <div id="slideContent" class="slide"></div>
 
-        <div class="presentation-footer">
-            إعداد معلمي تقنية المعلومات بمدرسة محمد بن سليمان الغافري
-        </div>
+        <div class="presentation-footer">إعداد معلمي تقنية المعلومات بمدرسة محمد بن سليمان الغافري</div>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwbftO3KCxsgvihJUsV9ywexEH7xm0mm_LV9z1TZednRDQkiwjn4fHAF2zTbxZdUkIJ/exec';
+        // ======= ضع الرابط الجديد هنا =======
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzJO5mMV8J9hveYvqtXjSc46hx5Xj8pcEjXGEpc9fiUztvasIoWuXhUlKtTMMVqheEo/exec';
+        // =====================================
 
+        let base64Image = "";
         let feedbackData = [];
         let currentIndex = 0;
 
-        const form = document.getElementById('surveyForm');
+        // إظهار وإخفاء الحقول
+        function toggleFields() {
+            const hasSolution = document.querySelector('input[name="hasSolution"]:checked');
+            const solutionDiv = document.getElementById('solutionDiv');
+            const imageDiv = document.getElementById('imageDiv');
+            
+            if (hasSolution && hasSolution.value === 'yes') {
+                solutionDiv.style.display = 'block';
+                imageDiv.style.display = 'none';
+            } else if (hasSolution && hasSolution.value === 'no') {
+                solutionDiv.style.display = 'none';
+                imageDiv.style.display = 'block';
+            }
+        }
+
+        // تحويل الصورة 
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onloadend = function() { base64Image = reader.result; }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // إرسال البيانات
+        const form = document.getElementById('supportForm');
         form.addEventListener('submit', e => {
             e.preventDefault();
+            
+            const hasSolution = document.querySelector('input[name="hasSolution"]:checked');
+            if(!hasSolution) { alert("الرجاء تحديد ما إذا كنت قد وجدت حلاً أم لا."); return; }
+
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = 'جاري الإرسال...';
+            submitBtn.innerText = 'جاري المعالجة وإرسال الصورة... ⏳';
             submitBtn.disabled = true;
 
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-                .then(() => {
-                    alert('شكراً لمشاركتك يا بطل!');
+            const payload = new URLSearchParams();
+            payload.append('name', document.getElementById('name').value);
+            payload.append('grade', document.getElementById('grade').value);
+            payload.append('problem', document.getElementById('problem').value);
+            payload.append('hasSolution', hasSolution.value === 'yes' ? 'تم الحل' : 'بانتظار الحل');
+            
+            if(hasSolution.value === 'yes') {
+                payload.append('solution', document.getElementById('solution').value);
+                payload.append('image', '');
+            } else {
+                payload.append('solution', '');
+                payload.append('image', base64Image);
+            }
+
+            fetch(scriptURL, { method: 'POST', body: payload })
+                .then(res => res.json())
+                .then(data => {
+                    alert('تم استلام تقريرك بنجاح!');
                     form.reset();
-                    submitBtn.innerText = 'إرسال المشاركة';
+                    base64Image = "";
+                    document.getElementById('solutionDiv').style.display = 'none';
+                    document.getElementById('imageDiv').style.display = 'none';
+                    submitBtn.innerText = 'إرسال التقرير 🚀';
                     submitBtn.disabled = false;
                     fetchData(); 
                 })
                 .catch(err => {
-                    alert('حدث خطأ، حاول مرة أخرى');
-                    submitBtn.innerText = 'إرسال المشاركة';
+                    alert('حدث خطأ في الاتصال، يرجى المحاولة لاحقاً.');
+                    submitBtn.innerText = 'إرسال التقرير 🚀';
                     submitBtn.disabled = false;
                 });
         });
 
+        // جلب وعرض البيانات
         function fetchData() {
             return fetch(scriptURL)
                 .then(res => res.json())
-                .then(data => {
-                    feedbackData = data.reverse(); 
-                })
+                .then(data => { feedbackData = data.reverse(); })
                 .catch(err => console.log('خطأ في جلب البيانات'));
         }
 
         async function startSlideshow() {
             await fetchData();
-            if (feedbackData.length === 0) {
-                alert("لا توجد مشاركات لعرضها بعد.");
-                return;
-            }
-            
+            if (feedbackData.length === 0) { alert("لا توجد مشاكل مسجلة لعرضها بعد."); return; }
             document.getElementById('slideshowContainer').style.display = 'flex';
             currentIndex = 0;
             showSlide();
@@ -272,20 +297,26 @@
             const content = document.getElementById('slideContent');
             const item = feedbackData[currentIndex];
             
-            // إعادة تفعيل الأنيميشن عند كل نقرة
             content.style.animation = 'none';
-            content.offsetHeight; /* trigger reflow */
+            content.offsetHeight; 
             content.style.animation = 'fadeIn 0.8s ease-out';
 
+            const isSolved = item.hasSolution === 'تم الحل';
+            const statusBadge = isSolved 
+                ? `<div class="status-badge status-solved">✅ تم إيجاد الحل</div>`
+                : `<div class="status-badge status-unsolved">⚠️ نحتاج مساعدة في حلها</div>`;
+
+            // عرض الصورة الفعلية باستخدام وسم <img> 
+            const solutionOrImage = isSolved
+                ? `<div class="slide-solution"><strong>💡 الحل المكتشف:</strong><br>${item.solution}</div>`
+                : (item.imageUrl ? `<img src="${item.imageUrl}" class="slide-image" alt="صورة توضيحية للمشكلة">` : `<div style="color:#94a3b8; font-size:1.5rem;">(لم يتم إرفاق صورة)</div>`);
+
             content.innerHTML = `
-                <div class="slide-name">👤 الطالب: ${item.name}</div>
-                <div class="slide-feedback">" ${item.feedback} "</div>
-                ${item.advice ? `
-                    <div class="slide-advice">
-                        <strong>💡 نصيحة:</strong> ${item.advice}
-                    </div>
-                ` : ''}
-                <div class="click-hint">👇 انقر في أي مكان للانتقال للمشاركة التالية</div>
+                ${statusBadge}
+                <div class="slide-header">👤 الطالب: ${item.name} | 🏫 الصف: ${item.grade}</div>
+                <div class="slide-problem">" ${item.problem} "</div>
+                ${solutionOrImage}
+                <div class="click-hint">👇 انقر في أي مكان للانتقال للحالة التالية</div>
             `;
         }
 
@@ -294,24 +325,14 @@
             showSlide();
         }
 
-        function stopSlideshow() {
-            document.getElementById('slideshowContainer').style.display = 'none';
-        }
-
-        // --- التحكم بالأزرار والنقرات ---
-
-        // 1. إغلاق العرض عند النقر على زر الإغلاق
+        // التحكم اليدوي
         document.getElementById('closeBtn').addEventListener('click', function(e) {
-            e.stopPropagation(); // منع انتقال النفرة إلى الشاشة الخلفية
-            stopSlideshow();
+            e.stopPropagation(); 
+            document.getElementById('slideshowContainer').style.display = 'none';
         });
 
-        // 2. الانتقال للشريحة التالية عند النقر في أي مكان على الشاشة
         document.getElementById('slideshowContainer').addEventListener('click', function(e) {
-            // يتم التغيير فقط إذا لم يكن العنصر المنقور هو زر الإغلاق
-            if (e.target.id !== 'closeBtn') {
-                nextSlide();
-            }
+            if (e.target.id !== 'closeBtn') { nextSlide(); }
         });
 
         fetchData();
